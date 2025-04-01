@@ -1,3 +1,1 @@
 CredentialStuffing/*.gz.b64 filter=lfs diff=lfs merge=lfs -text
-CredentialStuffing/usernames.gz.b64 filter=lfs diff=lfs merge=lfs -text
-CredentialStuffing/passwords.gz.b64 filter=lfs diff=lfs merge=lfs -text
