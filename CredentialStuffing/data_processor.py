@@ -19,9 +19,9 @@ def decode_and_decompress(input_file, output_file):
         f.write(original_data)
 
 # Compress and encode the files
-""" compress_and_encode("CredentialStuffing/usernames.txt", "CredentialStuffing/usernames.gz.b64")
-compress_and_encode("CredentialStuffing/passwords.txt", "CredentialStuffing/passwords.gz.b64") """
+#compress_and_encode("CredentialStuffing/usernames.txt", "CredentialStuffing/usernames.gz.b64")
+compress_and_encode("CredentialStuffing/passwords.txt", "CredentialStuffing/passwords.gz.b64")
 
 # Decode and decompress the files
-""" decode_and_decompress("CredentialStuffing/usernames.gz.b64", "CredentialStuffing/usernames.txt")
-decode_and_decompress("CredentialStuffing/passwords.gz.b64", "CredentialStuffing/passwords.txt") """
+#decode_and_decompress("CredentialStuffing/usernames.gz.b64", "CredentialStuffing/usernames.txt")
+#decode_and_decompress("CredentialStuffing/passwords.gz.b64", "CredentialStuffing/passwords.txt")
