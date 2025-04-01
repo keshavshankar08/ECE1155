@@ -1,3 +1,8 @@
+"""
+Author: Keshav Shankar
+Date: April 1, 2025
+Description: This script implements a CredentialStuffing class to simulate credential stuffing attacks.
+"""
 import threading
 import time
 import gzip
@@ -46,36 +51,49 @@ class CredentialStuffing:
         self._clean_credentials()
 
         # Search database for match
-        success, total_matches, search_time = self._search_database()
+        variation_enabled = False
+        success, total_matches, search_time = self._search_database(self.username, self.password)
 
-        # Return results if success
+        # If success, store results, otherwise try variations and store results
         if success:
-            self.result = (success, total_matches, search_time)
+            self.result = (success, total_matches, search_time, variation_enabled)
         else:
-            # TODO Generate varied credentials
-            # TODO Search against database
-            # if (hit found): self.result = stats crack success
-            # else: self.result = crack failed
-            pass
+            # Generate varied credentials
+            variation_enabled = True
+            varied_usernames, varied_passwords = self._generate_varied_credentials()
 
+            # Search database for match with each variation
+            overall_success = True
+            cumulative_matches = 0
+            cumulative_search_time = 0.0
+
+            for varied_username in varied_usernames:
+                for varied_password in varied_passwords:
+                    success, total_matches, search_time = self._search_database(varied_username, varied_password)
+                    cumulative_matches += total_matches
+                    cumulative_search_time += search_time
+                    overall_success = overall_success and success
+            
+            self.result = (overall_success, cumulative_matches, cumulative_search_time, variation_enabled)
+    
     def _clean_credentials(self):
         self.username = self.username.strip().lower()  
         self.password = self.password.strip()
 
-    def _search_database(self):
+    def _search_database(self, username, password):
         # Start time
         start_time = time.time()
 
         # Search usernames
         username_matches = 0
-        for username in self.usernames:
-            if self.username in username:
+        for usr in self.usernames:
+            if username in usr:
                 username_matches += 1
 
         # Search passwords
         password_matches = 0
-        for password in self.passwords:
-            if self.password in password:
+        for psw in self.passwords:
+            if password in psw:
                 password_matches += 1
 
         # End time
@@ -88,5 +106,28 @@ class CredentialStuffing:
 
         return success, total_matches, search_time
 
-    def generate_varied_credentials(self):
-        pass
+    def _generate_varied_credentials(self):
+        # Define variation functions
+        variations = [
+            lambda x: x,
+            lambda x: x + "123",
+            lambda x: x.capitalize(),
+            lambda x: x.upper(),
+            lambda x: x + "!",
+            lambda x: x.replace(".", "_"),
+            lambda x: x.replace("a", "@").replace("o", "0").replace("i", "1")
+        ]
+
+        # Apply variations to username
+        varied_usernames = set()
+        if self.username:
+            for variation in variations:
+                varied_usernames.add(variation(self.username))
+
+        # Apply variations to password
+        varied_passwords = set()
+        if self.password:
+            for variation in variations:
+                varied_passwords.add(variation(self.password))
+
+        return list(varied_usernames), list(varied_passwords)
