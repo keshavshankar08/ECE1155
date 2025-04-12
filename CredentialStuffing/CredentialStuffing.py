@@ -10,14 +10,17 @@ import base64
 
 class CredentialStuffing:
     def __init__(self, usernames_file_path, passwords_file_path):
-        self.username = ""                              # input username
-        self.password = ""                              # input password
-        self.usernames = []                             # list of usernames from database
-        self.passwords = []                             # list of passwords from database
-        self.result = None                              # result of attack
-        self.usernames_file_path = usernames_file_path  # file path for usernames
-        self.passwords_file_path = passwords_file_path  # file path for passwords
-        self._load_database()                           # loads database
+        self.username = ""                                  # input username
+        self.password = ""                                  # input password
+        self.usernames = []                                 # list of usernames from database
+        self.passwords = []                                 # list of passwords from database
+        self.result = None                                  # result of attack
+        self.ip_switch_delay = 0.0                          # delay for IP switch
+        self.base_delay_per_check = 0.0                     # base delay per check
+        self.variation_limit = 0                            # limit for variations
+        self.usernames_file_path = usernames_file_path      # file path for usernames
+        self.passwords_file_path = passwords_file_path      # file path for passwords
+        self._load_database()                               # loads database
 
     def _load_database(self):
         try:
@@ -32,10 +35,15 @@ class CredentialStuffing:
             decompressed_data = gzip.decompress(compressed_data)
             return decompressed_data.decode().splitlines()
 
-    def start_attack(self, username, password):
+    def start_attack(self, username, password, ip_switch_delay=0.3, base_delay_per_check=0.01, variation_limit=7):
         # Store credentials
         self.username = username
         self.password = password
+
+        # Store settings
+        self.ip_switch_delay = ip_switch_delay
+        self.base_delay_per_check = base_delay_per_check
+        self.variation_limit = variation_limit
 
         # Start attack on thread
         attack_thread = threading.Thread(target=self._attack)
@@ -52,11 +60,11 @@ class CredentialStuffing:
 
         # Search database for match
         variation_enabled = False
-        success, total_matches, search_time = self._search_database(self.username, self.password)
+        success, total_matches, simulation_search_time, real_search_time = self._search_database(self.username, self.password)
 
         # If success, store results, otherwise try variations and store results
         if success:
-            self.result = (success, total_matches, search_time, variation_enabled)
+            self.result = (success, total_matches, simulation_search_time, real_search_time, variation_enabled)
         else:
             # Generate varied credentials
             variation_enabled = True
@@ -65,16 +73,22 @@ class CredentialStuffing:
             # Search database for match with each variation
             overall_success = True
             cumulative_matches = 0
-            cumulative_search_time = 0.0
+            cumulative_simulation_search_time = 0.0
+            cumulative_real_search_time = 0.0
+            variations_tried = 0
 
             for varied_username in varied_usernames:
                 for varied_password in varied_passwords:
-                    success, total_matches, search_time = self._search_database(varied_username, varied_password)
+                    if variations_tried >= self.variation_limit ** 2:
+                        break
+                    variations_tried += 1
+                    success, total_matches, simulation_search_time, real_search_time = self._search_database(varied_username, varied_password)
                     cumulative_matches += total_matches
-                    cumulative_search_time += search_time
+                    cumulative_simulation_search_time += simulation_search_time
+                    cumulative_real_search_time += real_search_time
                     overall_success = overall_success and success
             
-            self.result = (overall_success, cumulative_matches, cumulative_search_time, variation_enabled)
+            self.result = (overall_success, cumulative_matches, cumulative_simulation_search_time, cumulative_real_search_time, variation_enabled)
     
     def _clean_credentials(self):
         self.username = self.username.strip().lower()  
@@ -99,12 +113,13 @@ class CredentialStuffing:
         # End time
         end_time = time.time()
 
-        # Calculate success, total matches, and search time
+        # Calculate success, total matches,  simulation search time, and real search time
         success = username_matches > 0 and password_matches > 0
         total_matches = username_matches + password_matches
-        search_time = end_time - start_time
+        simulation_search_time = end_time - start_time
+        real_search_time = simulation_search_time * self.base_delay_per_check + self.ip_switch_delay # Simulating real world delay
 
-        return success, total_matches, search_time
+        return success, total_matches, simulation_search_time, real_search_time
 
     def _generate_varied_credentials(self):
         # Define variation functions
