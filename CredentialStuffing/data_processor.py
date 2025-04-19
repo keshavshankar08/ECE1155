@@ -23,5 +23,5 @@ def decode_and_decompress(input_file, output_file):
 #compress_and_encode("CredentialStuffing/passwords.txt", "CredentialStuffing/passwords.gz.b64")
 
 # Decode and decompress the files
-#decode_and_decompress("CredentialStuffing/usernames.gz.b64", "CredentialStuffing/usernames.txt")
-#decode_and_decompress("CredentialStuffing/passwords.gz.b64", "CredentialStuffing/passwords.txt")
+decode_and_decompress("CredentialStuffing/usernames.gz.b64", "CredentialStuffing/usernames.txt")
+decode_and_decompress("CredentialStuffing/passwords.gz.b64", "CredentialStuffing/passwords.txt")
