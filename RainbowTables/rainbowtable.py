@@ -2,6 +2,7 @@ import hashlib
 
 
 
+
 class RainbowTable:
 
 
@@ -26,6 +27,7 @@ class RainbowTable:
     Arguments:
         filename -- file to take table from
     '''
+
     '''
     def load_rainbow_table_from_compressed(self, filename):
         lines = compression.decode_and_decompress(filename)
@@ -37,6 +39,8 @@ class RainbowTable:
         self.table = my_dict
     '''
     
+
+
     def load_rainbow_table(self, filename):
         with open(filename, "r", encoding="utf-8") as f:
             my_dict = {}
@@ -198,9 +202,5 @@ class RainbowTable:
                 return reduced
             reduced = self.reduce_function(hashed)
         return None
-<<<<<<< HEAD
-    
 
-=======
->>>>>>> 5360654bb2e291faa2081232c96cbea4713dbbcf
 
