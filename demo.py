@@ -1,6 +1,8 @@
 from CredentialStuffing.CredentialStuffing import CredentialStuffing
 from DictionaryAttack.DictionaryAttack import dictionary_attack_hash, hash_password
 import os
+from RainbowTables.RainbowTableAttack import run_rainbow_table
+import hashlib
 
 # Get user input of username, password, and algorithm to use
 username = input("Enter a username: ")
@@ -55,7 +57,11 @@ elif algorithm == "d":
     pass
 elif algorithm == "rt":
     print("Running rainbow table attack...")
-    pass
+    algorithm = input("select algorithm: MD5 or SHA1 ")
+    if algorithm == "MD5":
+        run_rainbow_table("md5-rainbow-short.rt", hashlib.md5)
+    elif algorithm == "SHA1":
+        run_rainbow_table("sha1-rainbow-short.rt", hashlib.sha1)
 
 
 # MANNY, ADD CODE HERE FOR BRUTE FORCE COMPARISON
