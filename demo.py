@@ -1,4 +1,6 @@
 from CredentialStuffing.CredentialStuffing import CredentialStuffing
+from DictionaryAttack.DictionaryAttack import dictionary_attack_hash, hash_password
+import os
 
 # Get user input of username, password, and algorithm to use
 username = input("Enter a username: ")
@@ -29,6 +31,27 @@ if algorithm == "cs":
 
 elif algorithm == "d":
     print("Running dictionary attack...")
+    chosen_hash = input("Enter the target hash: ")
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    dictionary_file = os.path.join(script_dir, "DictionaryAttack/rockyou.txt")
+    guess_rate = int(input("Enter estimated guess rate (guesses per second): "))
+    target_hash = hash_password(password, chosen_hash)
+    found, attempts, estimated_time, simulation_time, cracked_password = dictionary_attack_hash(
+        target_hash, dictionary_file, chosen_hash, guess_rate
+    )
+    
+    if found is None:
+       print("Error: The dictionary file was not found.")
+       exit(0)
+    
+    if found:
+        print(f"\nPassword found after {attempts} attempts.")
+        print(f"Cracked password: {cracked_password}")
+    else:
+        print("\nPassword not found in the dictionary.")
+    
+    print(f"Estimated time to crack: {estimated_time:.6f} seconds (at {guess_rate} guesses/sec).")
+    print(f"Actual simulation time: {simulation_time:.6f} seconds.")
     pass
 elif algorithm == "rt":
     print("Running rainbow table attack...")
