@@ -1,0 +1,49 @@
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QMessageBox
+
+class CyberAttackSimulator(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Cyberattack Simulator")
+        self.setGeometry(100, 100, 400, 300)
+        self.init_ui()
+
+    def init_ui(self):
+        layout = QVBoxLayout()
+
+        btn_brute = QPushButton("Brute Force Attack")
+        btn_brute.clicked.connect(self.simulate_brute_force)
+        layout.addWidget(btn_brute)
+
+        btn_dict = QPushButton("Dictionary Attack")
+        btn_dict.clicked.connect(self.simulate_dictionary)
+        layout.addWidget(btn_dict)
+
+        btn_cred = QPushButton("Credential Stuffing")
+        btn_cred.clicked.connect(self.simulate_credential_stuffing)
+        layout.addWidget(btn_cred)
+
+        btn_rainbow = QPushButton("Rainbow & Hash Attack")
+        btn_rainbow.clicked.connect(self.simulate_rainbow_hash)
+        layout.addWidget(btn_rainbow)
+
+        self.setLayout(layout)
+
+    def simulate_brute_force(self):
+        QMessageBox.information(self, "Brute Force", "Simulating brute force attack...")
+
+    def simulate_dictionary(self):
+        QMessageBox.information(self, "Dictionary Attack", "Simulating dictionary attack...")
+
+    def simulate_credential_stuffing(self):
+        QMessageBox.information(self, "Credential Stuffing", "Simulating credential stuffing...")
+
+    def simulate_rainbow_hash(self):
+        QMessageBox.information(self, "Rainbow & Hash", "Simulating rainbow/hash attack...")
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = CyberAttackSimulator()
+    window.show()
+    sys.exit(app.exec_())
+
