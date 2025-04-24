@@ -24,13 +24,12 @@ if algorithm == "cs":
     if(ip_switch_delay == "" or base_delay_per_check == "" or variation_limit == ""):
         success, matches, sim_time, real_time, varied = cs.start_attack(username, password)
     else:
-        success, matches, sim_time, real_time, varied = cs.start_attack(username, password, ip_switch_delay, base_delay_per_check, variation_limit)
+        success, matches, sim_time, real_time, varied = cs.start_attack(username, password, float(ip_switch_delay), float(base_delay_per_check), int(variation_limit))
 
     if success:
-        print(f"Attack successfully used the database and found {matches} matches in {sim_time} seconds, but would have taken {real_time} seconds in real life.")
+        print(f"Attack successfully used the database and found {matches} matches in {round(sim_time, 2)} seconds, but would have taken {round(real_time, 2)} seconds in real life.")
     elif varied:
-        print(f"Variations were needed to try to find matches. {matches} matches were found in {sim_time} seconds, which would have taken {real_time} seconds in real life.")
-
+        print(f"Variations were needed to try to find matches. {matches} matches were found in {round(sim_time, 2)} seconds, which would have taken {round(real_time, 2)} seconds in real life.")
 elif algorithm == "d":
     print("Running dictionary attack...")
     chosen_hash = input("Enter the target hash: ")
@@ -62,6 +61,3 @@ elif algorithm == "rt":
         run_rainbow_table("md5-rainbow-short.rt", hashlib.md5)
     elif algorithm == "SHA1":
         run_rainbow_table("sha1-rainbow-short.rt", hashlib.sha1)
-
-
-# MANNY, ADD CODE HERE FOR BRUTE FORCE COMPARISON
