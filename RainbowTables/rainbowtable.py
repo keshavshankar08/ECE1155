@@ -1,5 +1,6 @@
 import hashlib
-import pickle
+import gzip
+import base64
 
 
 class RainbowTable:
@@ -34,6 +35,7 @@ class RainbowTable:
                 key, value = line.strip().split(":", 1)
                 my_dict[key.strip()] = value.strip()
         self.table = my_dict
+
 
     def hash_function(self, plaintext):
         """Returns a string that contains the computed hash of the 
@@ -105,8 +107,9 @@ class RainbowTable:
             for key, value in self.table.items():
                 f.write(f"{key}: {value}\n")
 
-    '''
+    
     def save_to_file(self, filename):
+        '''
         writes this object on a file
         
         Arguments:
@@ -186,21 +189,4 @@ class RainbowTable:
                 return reduced
             reduced = self.reduce_function(hashed)
         return None
-'''
-md5_table_big = RainbowTable(hashlib.md5, 1000)
-md5_table_big.generate_table("RainbowTables/passwordsTest.txt")
-md5_table_big.save_to_text_file("md5_table_1m_1000.txt")
 
-sha1_table_big = RainbowTable(hashlib.sha1, 1000)
-sha1_table_big.generate_table("RainbowTables/passwordsTest.txt")
-sha1_table_big.save_to_text_file("sha1_table_1m_1000.txt")
-
-
-md5_table_big = RainbowTable(hashlib.md5, 1000)
-md5_table_big.generate_table("RainbowTables/passwordsTest.txt")
-md5_table_big.save_to_file("md5_table_1m_1000.pkl")
-
-sha1_table_big = RainbowTable(hashlib.sha1, 1000)
-sha1_table_big.generate_table("RainbowTables/passwordsTest.txt")
-sha1_table_big.save_to_file("sha1_table_1m_1000.pkl")
-'''
