@@ -1,6 +1,7 @@
 import hashlib
 
-
+# some ideas for structure of the class and function comment descriptions came from following github repository: 
+# https://github.com/bobctr/rainbowhub
 
 
 class RainbowTable:
