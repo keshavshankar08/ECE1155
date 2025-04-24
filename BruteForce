@@ -1,22 +1,34 @@
-import itertools
+import hashlib
+import random
 import string
+import time
 
-def brute_force_attack(target_password):
-    characters = string.ascii_letters + string.digits  # Possible characters (a-z, A-Z, 0-9)
-    attempts = 0
+def generate_random_password(length=6):
+    chars = string.ascii_letters + string.digits
+    return ''.join(random.choice(chars) for _ in range(length))
 
-    for length in range(1, len(target_password) + 1):
-        for guess in itertools.product(characters, repeat=length):
-            attempts += 1
-            guess = ''.join(guess)
-            print(f"Trying: {guess}")
-            if guess == target_password:
-                print(f"Password found: {guess}")
-                print(f"Total attempts: {attempts}")
-                return
+def hash_password(password):
+    return hashlib.sha256(password.encode()).hexdigest()
 
-    print("Password not found.")
+def estimate_brute_force_time(password, attempts_per_second=1e9):
+    chars = string.ascii_letters + string.digits
+    charset_size = len(chars)
+    total_attempts = sum(charset_size ** i for i in range(1, len(password) + 1))
+    seconds = total_attempts / attempts_per_second
+    return total_attempts, seconds
 
-if __name__ == "__main__":
-    target_password = "abc123"  # Replace with the password to simulate
-    brute_force_attack(target_password)
+def simulate_realistic_brute_force():
+    print("🔐 Simulating Brute Force Attack")
+
+    password = generate_random_password(length=random.randint(5, 8))
+    hashed_password = hash_password(password)
+
+    print(f"[INFO] Generated random password (unknown to attacker)")
+    print(f"[INFO] Hashed password: {hashed_password}")
+
+    total_guesses, estimated_time = estimate_brute_force_time(password)
+
+    print(f"\n📊 Estimated guesses to crack: {total_guesses:,}")
+    print(f"⏳ Estimated time at 1 billion guesses/sec: {estimated_time:.2f} seconds")
+
+simulate_realistic_brute_force()
