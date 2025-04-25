@@ -29,7 +29,7 @@ class RainbowTable:
         filename -- file to take table from
     '''
 
-    '''
+    
     def load_rainbow_table_from_compressed(self, filename):
         lines = compression.decode_and_decompress(filename)
         my_dict = {}
@@ -38,7 +38,7 @@ class RainbowTable:
                 key, value = line.strip().split(":", 1)
                 my_dict[key.strip()] = value.strip()
         self.table = my_dict
-    '''
+    
     
 
 
