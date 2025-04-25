@@ -11,6 +11,7 @@ print("Choose an attack algorithm to use:")
 print("\t(cs) Credential Stuffing")
 print("\t(d) Dictionary")
 print("\t(rt) Rainbow Table")
+algorithm = ""
 algorithm = input("Enter your choice: ")
 
 # Run the corresponding algorithm
@@ -54,10 +55,11 @@ elif algorithm == "d":
     print(f"Estimated time to crack: {estimated_time:.6f} seconds (at {guess_rate} guesses/sec).")
     print(f"Actual simulation time: {simulation_time:.6f} seconds.")
     pass
+
 elif algorithm == "rt":
     print("Running rainbow table attack...")
     algorithm = input("select algorithm: MD5 or SHA1 ")
     if algorithm == "MD5":
-        run_rainbow_table("md5-rainbow-short.rt", hashlib.md5)
+        run_rainbow_table("md5-rainbow-short.rt", hashlib.md5, password)
     elif algorithm == "SHA1":
-        run_rainbow_table("sha1-rainbow-short.rt", hashlib.sha1)
+        run_rainbow_table("sha1-rainbow-short.rt", hashlib.sha1, password)
